@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        Admin Panel
+      </div>
+      <nav>
+        <button class="sidebar-nav-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="sidebar-nav-btn" data-tab="users">User List</button>
+        <button class="sidebar-nav-btn" data-tab="shop">Shop Manager</button>
+        <button class="sidebar-nav-btn" data-tab="transactions">Transaction Log</button>
+        <button class="sidebar-nav-btn" data-tab="announcements">Game Announcements</button>
+      </nav>
+    </aside>
+    
+    <div class="main-content-wrapper">
+      
+      <header class="top-bar">
+        <div id="top-bar-title" style="font-weight: 600; font-size: 1.2rem;">Dashboard</div>
+        <button id="logoutBtn" class="btn" style="background: var(--sunset); color: #fff; padding: 8px 14px; margin: 0; font-size: 0.9rem;">Logout</button>
+      </header>
+      
+      <main class="content-area">
+        
+        <section id="page-dashboard" class="dashboard-page active">
+          <div class="content-grid">
+            <div class="stat-card">
+              <h3>Total Users</h3>
+              <div class="stat-value" id="stat-total-users">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Verified Users</h3>
+              <div class="stat-value" id="stat-verified-users">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Total Sales</h3>
+              <div class="stat-value" id="stat-total-sales">₱0</div>
+            </div>
+          </div>
+        </section>
+        
+        <section id="page-users" class="dashboard-page">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Registered Users (<span id="user-count">0</span>)</h2>
+            <button id="create-user-btn" class="btn btn-primary">Create New User</button>
+          </div>
+          <div class="filter-bar">
+            <input type="search" id="user-search" placeholder="Search Email or IGN...">
+          </div>
+          <div class="card" style="padding: 0;">
+            <div style="overflow-x: auto;">
+              <table id="user-table">
+                <thead>
+                  <tr>
+                    <th>Email (Account)</th>
+                    <th>Username (IGN)</th>
+                    <th>Status</th>
+                    <th>Payment Verified</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="user-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <section id="page-shop" class="dashboard-page">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Shop Manager</h2>
+            <button id="create-item-btn" class="btn btn-primary">Create New Item</button>
+          </div>
+          <div class="card" style="padding: 0;">
+            <div style="overflow-x: auto;">
+              <table id="item-table">
+                <thead>
+                  <tr>
+                    <th>Item ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="item-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <section id="page-transactions" class="dashboard-page">
+          <h2>Transaction Log</h2>
+          <div class="filter-bar">
+            <input type="search" id="transaction-search" placeholder="Search Email or Item Name...">
+          </div>
+          <div class="card" style="padding: 0;">
+            <div style="overflow-x: auto;">
+              <table id="transaction-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>User Email</th>
+                    <th>Item Name</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Account #</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="transaction-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <section id="page-announcements" class="dashboard-page">
+          <h2>Game Announcements</h2>
+          <div class="card">
+            <div class="form-field">
+              <label for="announcement-text">Post a message to all players (Leave blank to hide)</label>
+              <textarea id="announcement-text" rows="5"></textarea>
+            </div>
+            <button id="save-announcement-btn" class="btn btn-primary">Save Announcement</button>
+            
+            <div id="announcement-display" class="announcement-display" style="display: none;">
+              <h4>Current Announcement</h4>
+              <p id="current-announcement-text"></p>
+              <div id="current-announcement-meta" class="meta"></div>
+            </div>
+          </div>
+        </section>
+        
+      </main>
+      
+    </div>
+    
+  </div>
+  
+  <div class="modal-overlay" id="user-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Edit User</h3>
+        <button class="modal-close" id="user-modal-close-btn">×</button>
+      </div>
+      <form id="user-form">
+        <input type="hidden" id="modal-original-email">
+        <div class="form-field">
+          <label for="modal-email">Email</label>
+          <input type="email" id="modal-email" required>
+        </div>
+        <div class="form-field">
+          <label for="modal-username">Username (IGN)</label>
+          <input type="text" id="modal-username" required>
+        </div>
+        <div class="form-field">
+          <label for="modal-password">New Password</label>
+          <input type="password" id="modal-password" placeholder="Leave blank to keep unchanged">
+        </div>
+        <div class="form-field">
+          <label for="modal-phone">Phone Number</label>
+          <input type="tel" id="modal-phone">
+        </div>
+        <hr style="margin: 1.5rem 0;">
+        <div class="form-field">
+          <label for="modal-level">Level</label>
+          <input type="number" id="modal-level" value="1">
+        </div>
+        <div class="form-field">
+          <label for="modal-currency">In-Game Currency</label>
+          <input type="number" id="modal-currency" value="0">
+        </div>
+        <hr style="margin: 1.5rem 0;">
+        <div class="form-field-check">
+          <input type="checkbox" id="modal-verified">
+          <label for="modal-verified">Payment Verified</label>
+        </div>
+        <div class="form-field">
+          <label for="modal-gcash-name">GCash Name</label>
+          <input type="text" id="modal-gcash-name">
+        </div>
+        <div class="form-field">
+          <label for="modal-gcash-number">GCash Number</label>
+          <input type="tel" id="modal-gcash-number">
+        </div>
+        <hr style="margin: 1.5rem 0;">
+        <div class="form-field-check">
+          <input type="checkbox" id="modal-suspended">
+          <label for="modal-suspended">Account Suspended</label>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem;">
+          <button type="button" class="btn" id="user-modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modal-save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="modal-overlay" id="item-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="item-modal-title">Create Item</h3>
+        <button class="modal-close" id="item-modal-close-btn">×</button>
+      </div>
+      <form id="item-form">
+        <input type="hidden" id="modal-original-item-id">
+        <div class="form-field">
+          <label for="modal-item-id">Item ID (Unique, e.g., "bp_upgrade_1")</label>
+          <input type="text" id="modal-item-id" required>
+        </div>
+        <div class="form-field">
+          <label for="modal-item-name">Item Name</label>
+          <input type="text" id="modal-item-name" required>
+        </div>
+        <div class="form-field">
+          <label for="modal-item-desc">Description</label>
+          <input type="text" id="modal-item-desc">
+        </div>
+        <div class="form-field">
+          <label for="modal-item-price">Price</label>
+          <input type="number" id="modal-item-price" required>
+        </div>
+        <div class="form-field">
+          <label for="modal-item-cat">Category</label>
+          <input type="text" id="modal-item-cat" placeholder="e.g., Upgrades">
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem;">
+          <button type="button" class="btn" id="item-modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // --- Auth Check ---
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser !== 'admin@bth.com') {
+      window.location.href = 'login.html';
+    }
+
+    // --- Logout Logic ---
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = 'index.html'; 
+    };
+
+    // --- Initialize Data ---
+    if (!localStorage.getItem('bth_shop_items')) {
+      localStorage.setItem('bth_shop_items', JSON.stringify([
+        {id:'up1',name:'Backpack Upgrade',desc:'Increase carry capacity',price:120,cat:'Upgrades'},
+        {id:'up2',name:'Sturdier Axe',desc:'Chop faster',price:200,cat:'Upgrades'},
+      ]));
+    }
+    if (!localStorage.getItem('bth_transactions')) {
+      localStorage.setItem('bth_transactions', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('bth_announcement')) {
+      localStorage.setItem('bth_announcement', JSON.stringify({ message: 'Welcome to the prototype! More updates coming soon.', timestamp: new Date().toISOString() }));
+    }
+    
+    // --- Tab Switching Logic ---
+    const navButtons = document.querySelectorAll('.sidebar-nav-btn');
+    const contentPages = document.querySelectorAll('.dashboard-page');
+    const topBarTitle = document.getElementById('top-bar-title');
+    
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        topBarTitle.textContent = btn.textContent;
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        contentPages.forEach(page => {
+          page.classList.toggle('active', page.id === `page-${tab}`);
+        });
+        
+        // Refresh data when switching
+        if (tab === 'dashboard') loadDashboardStats();
+        if (tab === 'users') loadUserTable();
+        if (tab === 'shop') loadItemTable();
+        if (tab === 'transactions') loadTransactionTable();
+        if (tab === 'announcements') loadAnnouncement();
+      });
+    });
+
+    // --- Modal Elements ---
+    const userModal = document.getElementById('user-modal');
+    const userForm = document.getElementById('user-form');
+    const itemModal = document.getElementById('item-modal');
+    const itemForm = document.getElementById('item-form');
+    
+    // User Modal Fields
+    const modalOriginalEmail = document.getElementById('modal-original-email');
+    const modalEmail = document.getElementById('modal-email');
+    const modalUsername = document.getElementById('modal-username');
+    const modalPassword = document.getElementById('modal-password');
+    const modalPhone = document.getElementById('modal-phone');
+    const modalLevel = document.getElementById('modal-level');
+    const modalCurrency = document.getElementById('modal-currency');
+    const modalVerified = document.getElementById('modal-verified');
+    const modalGcashName = document.getElementById('modal-gcash-name');
+    const modalGcashNumber = document.getElementById('modal-gcash-number');
+    const modalSuspended = document.getElementById('modal-suspended');
+    
+    // Item Modal Fields
+    const modalOriginalItemID = document.getElementById('modal-original-item-id');
+    const modalItemID = document.getElementById('modal-item-id');
+    const modalItemName = document.getElementById('modal-item-name');
+    const modalItemDesc = document.getElementById('modal-item-desc');
+    const modalItemPrice = document.getElementById('modal-item-price');
+    const modalItemCat = document.getElementById('modal-item-cat');
+
+    // --- Modal Close Logic ---
+    const closeUserModal = () => { userModal.style.display = 'none'; userForm.reset(); };
+    document.getElementById('user-modal-close-btn').onclick = closeUserModal;
+    document.getElementById('user-modal-cancel-btn').onclick = closeUserModal;
+
+    const closeItemModal = () => { itemModal.style.display = 'none'; itemForm.reset(); };
+    document.getElementById('item-modal-close-btn').onclick = closeItemModal;
+    document.getElementById('item-modal-cancel-btn').onclick = closeItemModal;
+
+    // --- Helper: Get All Player Data ---
+    function getAllPlayers() {
+      let players = [];
+      for (const key in localStorage) {
+        if (key === 'loggedInUser' || key === 'bth_cart' || key === 'admin@bth.com' || key.startsWith('bth_') || !localStorage.hasOwnProperty(key)) {
+          continue;
+        }
+        try {
+          const data = JSON.parse(localStorage.getItem(key));
+          if (data && data.password) { 
+            players.push({ email: key, ...data });
+          }
+        } catch (e) {}
+      }
+      return players;
+    }
+    
+    function censorNumber(number) {
+        if (!number || number.length <= 4) return number || '';
+        return '*'.repeat(number.length - 4) + number.slice(-4);
+    }
+
+    // --- 1. Dashboard Page Logic ---
+    function loadDashboardStats() {
+      const players = getAllPlayers();
+      const transactions = JSON.parse(localStorage.getItem('bth_transactions'));
+      
+      const totalUsers = players.length;
+      const verifiedUsers = players.filter(p => p.isVerified).length;
+      const totalSales = transactions.reduce((sum, tx) => sum + (tx.amount || 0), 0); // Added safety check for amount
+      
+      document.getElementById('stat-total-users').textContent = totalUsers;
+      document.getElementById('stat-verified-users').textContent = verifiedUsers;
+      document.getElementById('stat-total-sales').textContent = `₱${totalSales}`;
+    }
+
+    // --- 2. User List Page Logic ---
+    const userTableBody = document.getElementById('user-table-body');
+    const userCountEl = document.getElementById('user-count');
+    const userSearchInput = document.getElementById('user-search');
+    
+    document.getElementById('create-user-btn').addEventListener('click', () => {
+      modalTitle.textContent = 'Create New User';
+      modalOriginalEmail.value = ''; 
+      modalEmail.readOnly = false;
+      userForm.reset();
+      userModal.style.display = 'flex';
+    });
+
+    function openEditModal(email) {
+      const userData = JSON.parse(localStorage.getItem(email));
+      if (!userData) return;
+      
+      modalTitle.textContent = 'Edit User';
+      modalOriginalEmail.value = email; 
+      modalEmail.value = email;
+      modalEmail.readOnly = true; 
+      
+      modalUsername.value = userData.username || '';
+      modalPassword.value = ''; 
+      modalPassword.placeholder = "Leave blank to keep unchanged";
+      modalPhone.value = userData.phone || '';
+      modalLevel.value = userData.level || 1;
+      modalCurrency.value = userData.inGameCurrency || 0;
+      modalVerified.checked = userData.isVerified || false;
+      modalSuspended.checked = userData.isSuspended || false;
+      modalGcashName.value = (userData.payment && userData.payment.name) || '';
+      modalGcashNumber.value = (userData.payment && userData.payment.number) || '';
+      
+      userModal.style.display = 'flex';
+    }
+
+    userForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const email = modalEmail.value;
+      const originalEmail = modalOriginalEmail.value;
+      const isNewUser = (originalEmail === '');
+      
+      let userData = isNewUser ? {} : JSON.parse(localStorage.getItem(originalEmail));
+      
+      if (isNewUser && localStorage.getItem(email)) {
+        alert('A user with this email already exists.');
+        return;
+      }
+      
+      if (!isNewUser && !userData) {
+          alert('Error: Could not find original user data.');
+          return;
+      }
+      
+      userData.username = modalUsername.value;
+      userData.phone = modalPhone.value;
+      userData.isVerified = modalVerified.checked;
+      userData.isSuspended = modalSuspended.checked;
+      userData.level = parseInt(modalLevel.value) || 1;
+      userData.inGameCurrency = parseInt(modalCurrency.value) || 0;
+      
+      if (modalPassword.value) {
+        userData.password = modalPassword.value;
+      } else if (isNewUser) {
+        alert('A password is required for new users.');
+        return;
+      } else if (!userData.password) {
+        alert('Error: Could not save user without a password.');
+        return;
+      }
+      
+      userData.payment = {
+        method: 'GCash', 
+        name: modalGcashName.value,
+        number: modalGcashNumber.value
+      };
+      
+      localStorage.setItem(email, JSON.stringify(userData));
+      
+      closeUserModal();
+      loadUserTable(); 
+    });
+    
+    function deleteUser(email) {
+      if (!confirm(`Are you sure you want to delete the user: ${email}? This action cannot be undone.`)) {
+        return;
+      }
+      localStorage.removeItem(email);
+      loadUserTable(); 
+    }
+
+    function loadUserTable() {
+      const searchTerm = userSearchInput.value.toLowerCase();
+      let players = getAllPlayers();
+      
+      if (searchTerm) {
+        players = players.filter(player => 
+          player.email.toLowerCase().includes(searchTerm) || 
+          (player.username && player.username.toLowerCase().includes(searchTerm))
+        );
+      }
+      
+      userTableBody.innerHTML = ''; 
+      userCountEl.textContent = players.length; 
+      
+      players.forEach(player => {
+        const row = userTableBody.insertRow();
+        row.insertCell(0).textContent = player.email;
+        row.insertCell(1).textContent = player.username || 'N/A';
+        
+        const statusCell = row.insertCell(2);
+        statusCell.textContent = player.isSuspended ? 'Suspended' : 'Active';
+        statusCell.style.color = player.isSuspended ? 'var(--sunset)' : 'green';
+        
+        row.insertCell(3).textContent = player.isVerified ? 'Yes' : 'No';
+        
+        const actionsCell = row.insertCell(4);
+        actionsCell.className = 'actions';
+        actionsCell.innerHTML = `
+          <button class="btn btn-small btn-primary edit-btn" data-email="${player.email}">Edit</button>
+          <button class="btn btn-small btn-danger delete-btn" data-email="${player.email}">Delete</button>
+        `;
+      });
+    }
+    
+    userSearchInput.addEventListener('input', loadUserTable); 
+    
+    userTableBody.addEventListener('click', (e) => {
+      const email = e.target.dataset.email;
+      if (!email) return;
+      if (e.target.classList.contains('edit-btn')) openEditModal(email);
+      if (e.target.classList.contains('delete-btn')) deleteUser(email);
+    });
+
+    // --- 3. Shop Manager Logic ---
+    const itemTableBody = document.getElementById('item-table-body');
+    
+    function loadItemTable() {
+      const items = JSON.parse(localStorage.getItem('bth_shop_items') || '[]');
+      itemTableBody.innerHTML = '';
+      items.forEach(item => {
+        const row = itemTableBody.insertRow();
+        row.insertCell(0).textContent = item.id;
+        row.insertCell(1).textContent = item.name;
+        row.insertCell(2).textContent = `₱${item.price}`;
+        row.insertCell(3).textContent = item.cat || 'N/A';
+        const actionsCell = row.insertCell(4);
+        actionsCell.className = 'actions';
+        actionsCell.innerHTML = `
+          <button class="btn btn-small btn-primary edit-item-btn" data-id="${item.id}">Edit</button>
+          <button class="btn btn-small btn-danger delete-item-btn" data-id="${item.id}">Delete</button>
+        `;
+      });
+    }
+    
+    document.getElementById('create-item-btn').addEventListener('click', () => {
+      itemForm.reset();
+      modalOriginalItemID.value = ''; 
+      modalItemID.readOnly = false;
+      document.getElementById('item-modal-title').textContent = 'Create New Item';
+      itemModal.style.display = 'flex';
+    });
+    
+    itemTableBody.addEventListener('click', (e) => {
+      const id = e.target.dataset.id;
+      if (!id) return;
+      
+      let items = JSON.parse(localStorage.getItem('bth_shop_items'));
+      
+      if (e.target.classList.contains('edit-item-btn')) {
+        const item = items.find(i => i.id === id);
+        if (item) {
+          modalOriginalItemID.value = item.id;
+          modalItemID.value = item.id;
+          modalItemID.readOnly = true;
+          modalItemName.value = item.name;
+          modalItemDesc.value = item.desc;
+          modalItemPrice.value = item.price;
+          modalItemCat.value = item.cat;
+          document.getElementById('item-modal-title').textContent = 'Edit Item';
+          itemModal.style.display = 'flex';
+        }
+      }
+      
+      if (e.target.classList.contains('delete-item-btn')) {
+        if (confirm(`Are you sure you want to delete item: ${id}?`)) {
+          items = items.filter(i => i.id !== id);
+          localStorage.setItem('bth_shop_items', JSON.stringify(items));
+          loadItemTable();
+        }
+      }
+    });
+
+    itemForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const id = modalItemID.value;
+      const originalID = modalOriginalItemID.value;
+      const isNew = (originalID === '');
+      let items = JSON.parse(localStorage.getItem('bth_shop_items') || '[]');
+      
+      if (isNew && items.find(i => i.id === id)) {
+        alert('An item with this ID already exists.');
+        return;
+      }
+      
+      const newItemData = {
+        id: id,
+        name: modalItemName.value,
+        desc: modalItemDesc.value,
+        price: parseInt(modalItemPrice.value) || 0, // Ensure price is a number
+        cat: modalItemCat.value
+      };
+      
+      if (isNew) {
+        items.push(newItemData);
+      } else {
+        const index = items.findIndex(i => i.id === originalID);
+        if (index > -1) items[index] = newItemData; 
+        else items.push(newItemData); 
+      }
+      
+      localStorage.setItem('bth_shop_items', JSON.stringify(items));
+      closeItemModal();
+      loadItemTable();
+    });
+
+    // --- 4. Transaction Log Logic ---
+    const transactionTableBody = document.getElementById('transaction-table-body');
+    const transactionSearchInput = document.getElementById('transaction-search');
+    
+    function loadTransactionTable() {
+      const searchTerm = transactionSearchInput.value.toLowerCase();
+      let transactions = JSON.parse(localStorage.getItem('bth_transactions') || '[]');
+      
+      if (searchTerm) {
+          transactions = transactions.filter(tx =>
+              (tx.userEmail && tx.userEmail.toLowerCase().includes(searchTerm)) ||
+              (tx.itemName && tx.itemName.toLowerCase().includes(searchTerm))
+          );
+      }
+      
+      transactionTableBody.innerHTML = '';
+      
+      transactions.slice().reverse().forEach(tx => { 
+        const row = transactionTableBody.insertRow();
+        row.insertCell(0).textContent = new Date(tx.date).toLocaleString();
+        row.insertCell(1).textContent = tx.userEmail || 'N/A';
+        row.insertCell(2).textContent = tx.itemName || 'N/A';
+        row.insertCell(3).textContent = tx.itemDescription || 'N/A'; 
+        row.insertCell(4).textContent = `₱${tx.amount || 0}`;
+        row.insertCell(5).textContent = tx.paymentMethod || 'N/A'; 
+        row.insertCell(6).textContent = tx.censoredAccountNumber || 'N/A'; 
+        
+        const actionsCell = row.insertCell(7);
+        actionsCell.className = 'actions';
+        actionsCell.innerHTML = `<button class="btn btn-small btn-primary receipt-btn" data-txid="${tx.id}">Receipt</button>`; 
+      });
+    }
+    
+    transactionSearchInput.addEventListener('input', loadTransactionTable); 
+    
+    transactionTableBody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('receipt-btn')) {
+            const txId = e.target.dataset.txid;
+            const transactions = JSON.parse(localStorage.getItem('bth_transactions') || '[]');
+            const tx = transactions.find(t => t.id === txId);
+            if(tx) {
+                generateReceipt(tx);
+            } else {
+                alert('Transaction details not found.');
+            }
+        }
+    });
+    
+    function generateReceipt(tx) {
+        const receiptContent = `
+            --- Transaction Receipt ---
+            Transaction ID: ${tx.id}
+            Date: ${new Date(tx.date).toLocaleString()}
+            User: ${tx.userEmail}
+            Item: ${tx.itemName}
+            Description: ${tx.itemDescription}
+            Amount: ₱${tx.amount}
+            Method: ${tx.paymentMethod} (${tx.censoredAccountNumber})
+            -------------------------
+        `;
+        console.log(receiptContent); 
+        alert('Receipt generated (prototype - check browser console).');
+        // Example: Open in new window
+        const receiptWindow = window.open('','_blank');
+        receiptWindow.document.write('<pre>' + receiptContent + '</pre>');
+        receiptWindow.document.title = `Receipt ${tx.id}`;
+    }
+
+
+    // --- 5. Announcements Logic ---
+    const announcementText = document.getElementById('announcement-text');
+    const announcementDisplay = document.getElementById('announcement-display');
+    const currentAnnouncementText = document.getElementById('current-announcement-text');
+    const currentAnnouncementMeta = document.getElementById('current-announcement-meta');
+    
+    function loadAnnouncement() {
+      const data = JSON.parse(localStorage.getItem('bth_announcement') || '{}');
+      if (data && data.message) {
+        announcementText.value = data.message;
+        currentAnnouncementText.textContent = data.message;
+        currentAnnouncementMeta.textContent = `Posted by admin@bth.com on ${new Date(data.timestamp).toLocaleString()}`;
+        announcementDisplay.style.display = 'block';
+      } else {
+        announcementText.value = '';
+        announcementDisplay.style.display = 'none';
+      }
+    }
+    
+    document.getElementById('save-announcement-btn').addEventListener('click', () => {
+      const message = announcementText.value;
+      const timestamp = new Date().toISOString();
+      const announcementData = { message, timestamp };
+      
+      localStorage.setItem('bth_announcement', JSON.stringify(announcementData));
+      alert('Announcement saved!');
+      loadAnnouncement(); // Refresh display
+    });
+
+    // --- Initial Load ---
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDashboardStats(); // Load default tab
+    });
+
+  </script>
+</body>
+</html>

@@ -5,310 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Player Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --ocean:#007c91;
-      --teal:#00b3bf;
-      --sand:#f0e6d8;
-      --sunset:#ff8a65;
-      --dark-veil: rgba(0,0,0,0.55);
-      --card:#ffffff;
-      --muted:#6b7a7a;
-      --dark-green: #2e5d4f;
-    }
-    *{box-sizing:border-box}
-    
-    html{
-      height:100%;
-    }
-    
-    body{
-      margin:0;
-      font-family:'Work Sans',system-ui,Arial;
-      background:var(--sand);
-      color:#122;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      height: 100%;
-    }
-    
-    /* --- New Dashboard Layout --- */
-    .dashboard-container {
-      display: flex;
-      height: 100vh;
-    }
-    
-    /* --- Sidebar (Left Column) --- */
-    .sidebar {
-      width: 240px;
-      background: var(--dark-green);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
-    
-    .sidebar-user {
-      padding: 1.5rem;
-      font-weight: 700;
-      font-size: 1.2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .sidebar nav {
-      display: flex;
-      flex-direction: column;
-      padding: 1rem 0;
-    }
-    
-    .sidebar-nav-btn {
-      background: transparent;
-      border: none;
-      color: rgba(255,255,255,0.8);
-      padding: 1rem 1.5rem;
-      text-align: left;
-      font-size: 1rem;
-      font-weight: 600;
-      font-family: 'Work Sans', sans-serif;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-    
-    .sidebar-nav-btn:hover {
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-    }
-    
-    .sidebar-nav-btn.active {
-      background: var(--teal);
-      color: #fff;
-    }
 
-    /* --- Main Content (Right Column) --- */
-    .main-content-wrapper {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden; 
-    }
-    
-    .top-bar {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 1rem 2rem;
-      background: var(--card);
-      border-bottom: 1px solid #e0e0e0;
-      flex-shrink: 0;
-    }
-    
-    .content-area {
-      flex-grow: 1;
-      padding: 2rem;
-      overflow-y: auto; 
-      background: var(--sand);
-    }
-    
-    /* --- Content Pages --- */
-    .dashboard-page {
-      display: none; 
-    }
-    
-    .dashboard-page.active {
-      display: block; 
-    }
-    
-    .content-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-    
-    .shop-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 1.5rem;
-    }
-    
-    .shop-items-column {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+  <link rel="stylesheet" href="style.css">
 
-    /* --- General Components --- */
-    .btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700; border: none; cursor: pointer; transition: background 0.3s;}
-    .btn-primary{background:var(--teal);color:#fff}
-    .btn-primary:hover{background:#008a96;}
-    
-    .card{
-      background:var(--card);
-      padding:1.5rem; 
-      border-radius:12px;
-      box-shadow:0 6px 18px rgba(10,20,20,0.04);
-    }
-    .card h2, .card h3, .card h4 {
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-    
-    .small-muted{font-size:0.85rem;color:var(--muted)}
-
-    /* Progress Bar */
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      background: rgba(0,0,0,0.1); 
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .progress {
-      height: 100%;
-      background: #7ea36a;
-      width: 65%;
-    }
-    
-    /* Cart */
-    .cart-list{max-height:300px;overflow:auto; margin-bottom: 1rem;}
-    .cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(0,0,0,0.08)}
-    .cart-row button {
-      background: #ff5c5c;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      line-height: 20px;
-    }
-    
-    /* Store Items */
-    .items{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:12px
-    }
-    .item{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f7fffd);display:flex;flex-direction:column;gap:8px}
-    .item .title{font-weight:700}
-    
-    .item-image-placeholder {
-      width: 100%;
-      height: 120px;
-      border-radius: 8px;
-      background: linear-gradient(180deg,#dfeff0,#bfe0d9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    /* Settings Form */
-    .form-field {
-      margin-bottom: 1rem;
-    }
-    .form-field label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    .form-field input, .form-field select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: 'Work Sans', sans-serif;
-    }
-    
-    /* ADDED: Style for readonly inputs */
-    .form-field input[readonly] {
-      background: #eee;
-      color: #777;
-      cursor: not-allowed;
-    }
-    
-    /* Achievements */
-    .ach-category {
-      margin-bottom: 1.5rem;
-    }
-    .ach-list {
-      list-style: none;
-      padding-left: 0;
-    }
-    .ach-list li {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #eee;
-    }
-    .ach-list li.done {
-      color: var(--muted);
-      text-decoration: line-through;
-    }
-    .ach-list li.not-done::before {
-      content: '☐';
-      margin-right: 10px;
-      font-weight: 700;
-    }
-    .ach-list li.done::before {
-      content: '☑';
-      margin-right: 10px;
-      font-weight: 700;
-      color: var(--teal);
-    }
-    
-    /* Responsive */
-    @media (max-width: 980px) {
-      .shop-grid {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        width: 180px;
-      }
-      .sidebar-user {
-        padding: 1rem;
-        font-size: 1rem;
-      }
-      .sidebar-nav-btn {
-        padding: 0.8rem 1rem;
-        font-size: 0.9rem;
-      }
-      .content-area {
-        padding: 1rem;
-      }
-      .top-bar {
-        padding: 0.5rem 1rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-container {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        border-bottom: 2px solid var(--teal);
-      }
-      .sidebar-user {
-        border-bottom: none;
-        border-right: 1px solid rgba(255,255,255,0.1);
-      }
-      .sidebar nav {
-        flex-direction: row;
-        flex-grow: 1;
-        justify-content: space-around;
-      }
-      .top-bar {
-        display: none;
-      }
-      #mobile-logout {
-        display: block !important;
-      }
-    }
-    
-  </style>
 </head>
 <body>
 
@@ -336,11 +35,18 @@
       <main class="content-area">
         
         <section id="page-overview" class="dashboard-page active">
-          <div class="content-grid">
+          
+          <div class="card" id="announcement-card" style="display: none; background-color: var(--card-bg); color: #333; margin-bottom: 1.5rem;">
+            <h3>A Message from the Devs</h3>
+            <p id="announcement-text"></p>
+            <p id="announcement-meta" class="small-muted" style="color: rgba(0,0,0,0.7); margin: 0;"></p>
+          </div>
+          
+          <div class="content-grid" style="margin-top: 1.5rem;">
             <div class="card">
               <h2>Your Progress</h2>
+              <p>Level <span id="overview-level">1</span> - Explorer</p>
               <div class="progress-bar"><div class="progress"></div></div>
-              <p>Level 3 - Explorer</p>
             </div>
 
             <div class="card">
@@ -353,7 +59,7 @@
               <p>The eastern shore remains unexplored...</p>
             </div>
             
-            </div>
+          </div>
         </section>
         
         <section id="page-settings" class="dashboard-page">
@@ -374,6 +80,14 @@
                 <label for="setting-ign">Change IGN (In-Game Name)</label>
                 <input type="text" id="setting-ign" placeholder="New IGN">
               </div>
+              <div class="form-field">
+                <label for="setting-level">Player Level</label>
+                <input type="number" id="setting-level" readonly>
+              </div>
+              <div class="form-field">
+                <label for="setting-currency">In-Game Currency</label>
+                <input type="number" id="setting-currency" readonly>
+              </div>
               <button id="save-account-btn" class="btn btn-primary">Save Account Info</button>
             </div>
             
@@ -391,16 +105,17 @@
             </div>
             
             <div class="card">
-              <h3>Payment</h3>
+              <h3>Payment Verification (GCash)</h3>
               <div class="form-field">
-                <label for="setting-payment">Payment Method</label>
-                <select id="setting-payment">
-                  <option value="">-- Select Method --</option>
-                  <option value="gcash">GCash</option>
-                  <option value="paypal">PayPal</option>
-                </select>
+                <label for="setting-gcash-name">Full Name (GCash)</label>
+                <input type="text" id="setting-gcash-name" placeholder="Juan Dela Cruz">
               </div>
-              <button class="btn btn-primary" onclick="alert('Payment method saved (prototype)')">Save Payment</button>
+              <div class="form-field">
+                <label for="setting-gcash-number">GCash Number</label>
+                <input type="tel" id="setting-gcash-number" placeholder="09171234567">
+              </div>
+              <button id="verify-payment-btn" class="btn btn-primary">Verify Payment</button>
+              <p id="verification-status" class="small-muted" style="margin-top: 1rem;"></p>
             </div>
 
           </div>
@@ -408,6 +123,11 @@
         
         <section id="page-shop" class="dashboard-page">
           <h2>Shop</h2>
+          
+          <div id="verification-prompt" style="display: none;">
+            Please <a id="verify-link">verify your payment method</a> in Settings to enable the shop.
+          </div>
+          
           <div class="shop-grid">
             
             <div class="shop-items-column">
@@ -448,7 +168,7 @@
               <div class="card">
                 <h4>Payment</h4>
                 <p class="small-muted">Your saved payment method will be used.</p>
-                <button class="btn btn-primary" style="width: 100%;" onclick="alert('Proceeding to secure payment (prototype)...')">Proceed to Payment</button>
+                <button class="btn btn-primary" id="proceed-to-payment" style="width: 100%;" onclick="alert('Proceeding to secure payment (prototype)...')">Proceed to Payment</button>
               </div>
             </div>
             
@@ -515,25 +235,39 @@
   </div>
 
   <script>
-    // --- Auth Check ---
-    // MODIFIED: 'loggedInUser' is now the email
+    // --- Auth Check & Initial Data Load ---
     const userEmail = localStorage.getItem('loggedInUser');
-    const userData = userEmail ? JSON.parse(localStorage.getItem(userEmail)) : null;
+    let userData = userEmail ? JSON.parse(localStorage.getItem(userEmail)) : null;
 
-    if (!userEmail || !userData) {
-      window.location.href = 'login.html'; // Redirect to login
+    if (!userEmail || !userData || userEmail === 'admin@bth.com') {
+      window.location.href = 'login.html'; 
     } else {
-      // MODIFIED: Use IGN for welcome, populate settings
       document.getElementById('sidebar-welcome').textContent = `User: ${userData.username}`;
+      document.getElementById('overview-level').textContent = userData.level || 1;
+      
       document.getElementById('setting-ign').value = userData.username || '';
       document.getElementById('setting-email').value = userEmail;
       document.getElementById('setting-phone').value = userData.phone || '';
+      document.getElementById('setting-level').value = userData.level || 1;
+      document.getElementById('setting-currency').value = userData.inGameCurrency || 0;
+      
+      if (userData.payment) {
+        document.getElementById('setting-gcash-name').value = userData.payment.name || '';
+        document.getElementById('setting-gcash-number').value = userData.payment.number || '';
+      }
+      
+      const announcementData = JSON.parse(localStorage.getItem('bth_announcement') || '{}');
+      if (announcementData && announcementData.message) {
+        document.getElementById('announcement-card').style.display = 'block';
+        document.getElementById('announcement-text').textContent = announcementData.message;
+        document.getElementById('announcement-meta').textContent = `Posted by admin@bth.com on ${new Date(announcementData.timestamp).toLocaleString()}`;
+      }
     }
 
     // --- Logout Logic ---
     function logout() {
       localStorage.removeItem('loggedInUser');
-      window.location.href = 'index.html'; // Logout redirects to home
+      window.location.href = 'index.html'; 
     }
     document.getElementById('logoutBtn').onclick = logout;
     document.getElementById('mobile-logout').onclick = logout;
@@ -542,45 +276,94 @@
     const navButtons = document.querySelectorAll('.sidebar-nav-btn');
     const contentPages = document.querySelectorAll('.dashboard-page');
     
+    function showTab(tabName) {
+      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+      contentPages.forEach(page => {
+        page.classList.toggle('active', page.id === `page-${tabName}`);
+      });
+    }
+    
     navButtons.forEach(btn => {
       if (btn.id === 'mobile-logout') return; 
-      
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-        navButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        contentPages.forEach(page => {
-          page.classList.toggle('active', page.id === `page-${tab}`);
-        });
-      });
+      btn.addEventListener('click', () => showTab(btn.dataset.tab));
     });
-    
+
     // --- Settings Save Logic ---
     document.getElementById('save-account-btn').onclick = () => {
-      if (!userEmail || !userData) return; // Should not happen
+      if (!userEmail || !userData) return; 
       
-      // Get new values
       const newIgn = document.getElementById('setting-ign').value;
       const newPhone = document.getElementById('setting-phone').value;
       
-      // Update data object
       userData.username = newIgn;
       userData.phone = newPhone;
       
-      // Save back to localStorage
       localStorage.setItem(userEmail, JSON.stringify(userData));
       
-      // Update UI
       document.getElementById('sidebar-welcome').textContent = `User: ${newIgn}`;
       alert('Account info saved (prototype)');
     };
+    
+    // --- Payment Verification Logic ---
+    const verifyBtn = document.getElementById('verify-payment-btn');
+    const verificationStatus = document.getElementById('verification-status');
+    const verificationPrompt = document.getElementById('verification-prompt');
+    const verifyLink = document.getElementById('verify-link');
+    
+    verifyLink.onclick = () => showTab('settings');
+
+    function updateVerificationStatus() {
+      userData = userEmail ? JSON.parse(localStorage.getItem(userEmail)) : null; 
+      if (!userData) { logout(); return; } 
+
+      if (userData.isVerified && userData.payment) {
+        verificationStatus.textContent = `Verified with ${userData.payment.method || 'GCash'}: ${userData.payment.name} (${censorNumber(userData.payment.number)})`;
+        verifyBtn.textContent = 'Payment Verified';
+        verifyBtn.disabled = true;
+        
+        verificationPrompt.style.display = 'none';
+        document.querySelectorAll('.add-cart, #checkout, #proceed-to-payment').forEach(btn => {
+          btn.disabled = false;
+        });
+      } else {
+        verificationStatus.textContent = 'Your payment method is not verified.';
+        verifyBtn.textContent = 'Verify Payment';
+        verifyBtn.disabled = false;
+        
+        verificationPrompt.style.display = 'block';
+        document.querySelectorAll('.add-cart, #checkout, #proceed-to-payment').forEach(btn => {
+          btn.disabled = true;
+        });
+      }
+    }
+    
+    function censorNumber(number) {
+        if (!number || number.length <= 4) return number || '';
+        return '*'.repeat(number.length - 4) + number.slice(-4);
+    }
+    
+    verifyBtn.addEventListener('click', () => {
+      const gcashName = document.getElementById('setting-gcash-name').value;
+      const gcashNumber = document.getElementById('setting-gcash-number').value;
+      
+      if (!gcashName || !gcashNumber) {
+        alert('Please enter both your GCash name and number.');
+        return;
+      }
+      
+      userData.isVerified = true;
+      userData.payment = { method: 'GCash', name: gcashName, number: gcashNumber };
+      localStorage.setItem(userEmail, JSON.stringify(userData));
+      
+      alert('Payment Verified!');
+      updateVerificationStatus();
+    });
 
     // --- Store & Cart Logic ---
-    const SAMPLE_ITEMS = [
-      {id:'up1',title:'Backpack Upgrade',desc:'Increase carry capacity',price:120,cat:'Upgrades'},
-      {id:'up2',title:'Sturdier Axe',desc:'Chop faster',price:200,cat:'Upgrades'},
-      {id:'rw1',title:'Survivor Starter Pack',desc:'Starter resources bundle',price:80,cat:'Rewards'},
-    ];
+    const SHOP_ITEMS = JSON.parse(localStorage.getItem('bth_shop_items') || '[]');
+    const BATTLEPASS_ITEM = {id:'bp1',name:'Season 1 Battlepass',desc:'Unlock 100 Tiers',price:350,cat:'Battlepass'};
+    const ALL_PURCHASABLE_ITEMS = [...SHOP_ITEMS, BATTLEPASS_ITEM];
+    
     let CART = JSON.parse(localStorage.getItem('bth_cart')||'[]');
     
     function saveCart(){ 
@@ -598,15 +381,13 @@
       }
       
       let total=0; 
-      const allItems = [...SAMPLE_ITEMS, {id:'bp1',title:'Season 1 Battlepass',price:350}];
-      
       CART.forEach(ci=>{ 
-        const it = allItems.find(s=>s.id===ci.id); 
+        const it = ALL_PURCHASABLE_ITEMS.find(s=>s.id===ci.id); 
         if (!it) return;
         total+=it.price*ci.qty; 
         const row = document.createElement('div'); 
         row.className='cart-row'; 
-        row.innerHTML = `<div>${it.title} x${ci.qty}</div><div>₱${it.price*ci.qty} <button data-remove=\"${ci.id}\">✕</button></div>`; 
+        row.innerHTML = `<div>${it.name} x${ci.qty}</div><div>₱${it.price*ci.qty} <button data-remove=\"${ci.id}\">✕</button></div>`; 
         list.appendChild(row); 
       });
       document.getElementById('cart-total').textContent = `Total: ₱${total}`;
@@ -620,18 +401,55 @@
     
     document.getElementById('checkout').addEventListener('click', ()=>{ 
       if(CART.length===0){ alert('Cart empty'); return;} 
-      alert('Proceeding to checkout (prototype)...'); 
+      if (!userData.isVerified || !userData.payment) {
+          alert('Please verify your payment method first.');
+          return;
+      }
+      
+      let transactions = JSON.parse(localStorage.getItem('bth_transactions') || '[]');
+      let total = 0;
+      const paymentMethod = userData.payment.method || 'GCash'; 
+      const censoredNumber = censorNumber(userData.payment.number);
+      const itemsPurchased = []; 
+      
+      CART.forEach(ci => {
+        const it = ALL_PURCHASABLE_ITEMS.find(s => s.id === ci.id);
+        if(it) {
+          const itemTotal = it.price * ci.qty;
+          total += itemTotal;
+          itemsPurchased.push(`${it.name} x${ci.qty}`); 
+          transactions.push({
+            id: `TX-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`, 
+            date: new Date().toISOString(),
+            userEmail: userEmail,
+            itemName: it.name,
+            itemDescription: it.desc || '', 
+            amount: itemTotal,
+            paymentMethod: paymentMethod, 
+            censoredAccountNumber: censoredNumber 
+          });
+        }
+      });
+      
+      localStorage.setItem('bth_transactions', JSON.stringify(transactions));
+      alert(`Checkout successful for ₱${total}!\nItems: ${itemsPurchased.join(', ')}\nTransaction logged.`); 
+      
       CART=[]; 
       saveCart(); 
     });
     
     // Populate store items
     const storeEl = document.getElementById('store-items');
-    SAMPLE_ITEMS.forEach(it=>{
-      const div = document.createElement('div'); div.className='item card';
-      div.innerHTML = `<div class=\"item-image-placeholder\">Item Image</div><div style=\"display:flex;justify-content:space-between;align-items:center\"><div><div class=\"title\">${it.title}</div><div class=\"small-muted\">${it.cat}</div></div><div style=\"text-align:right\">₱${it.price}</div></div><div class=\"small-muted\">${it.desc}</div><div style=\"margin-top:auto;display:flex;gap:8px;justify-content:flex-end\"><button class=\"btn btn-primary add-cart\" data-id=\"${it.id}\">Add to Cart</button></div>`;
-      storeEl.appendChild(div);
-    });
+    storeEl.innerHTML = ''; 
+    if (SHOP_ITEMS && SHOP_ITEMS.length > 0) {
+        SHOP_ITEMS.forEach(it=>{
+          const div = document.createElement('div'); div.className='item card';
+          div.innerHTML = `<div class=\"item-image-placeholder\">Item Image</div><div style=\"display:flex;justify-content:space-between;align-items:center\"><div><div class=\"title\">${it.name}</div><div class=\"small-muted\">${it.cat || ''}</div></div><div style=\"text-align:right\">₱${it.price}</div></div><div class=\"small-muted\">${it.desc || ''}</div><div style=\"margin-top:auto;display:flex;gap:8px;justify-content:flex-end\"><button class=\"btn btn-primary add-cart\" data-id=\"${it.id}\">Add to Cart</button></div>`;
+          storeEl.appendChild(div);
+        });
+    } else {
+        storeEl.innerHTML = '<p class="small-muted">No items currently available.</p>';
+    }
 
     // Event listener for "Add to Cart" buttons
     document.body.addEventListener('click', e=>{
@@ -651,8 +469,9 @@
       }
     });
 
-    // Initial cart render on page load
+    // --- Initial Page Load Calls ---
     renderCart();
+    updateVerificationStatus(); 
 
   </script>
 </body>

@@ -5,92 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beyond the Horizon - Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --ocean:#007c91;
-      --teal:#00b3bf;
-      --sand:#f0e6d8;
-      --sunset:#ff8a65;
-      --dark-veil: rgba(0,0,0,0.55);
-      --card:#ffffff;
-      --muted:#6b7a7a;
-      --glass: rgba(255,255,255,0.06);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;}
-    body{
-      margin:0;
-      font-family:'Work Sans',system-ui,Arial;
-      background:var(--sand);
-      color:#122;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
 
-    /* ===== Header ===== */
-    header{
-      position:fixed;inset:0 0 auto 0;height:68px;display:flex;align-items:center;justify-content:space-between;padding:10px 26px;z-index:999;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));backdrop-filter: blur(6px);
-    }
-    .brand{display:flex;gap:12px;align-items:center;color:#fff}
-    .logo{width:44px;height:44px;border-radius:8px;overflow:hidden;flex:0 0 44px}
-    .logo img{width:100%;height:100%;object-fit:cover;display:block}
-    .title{font-weight:700;font-size:1.05rem;letter-spacing:0.6px}
-    nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0}
-    nav a{color:#fff;text-decoration:none;font-weight:600;opacity:0.95}
-    nav a:hover{opacity:1;text-decoration:underline}
+  <link rel="stylesheet" href="style.css">
 
-    /* ===== Page layout ===== */
-    main{margin-top:68px}
-    section{min-height:80vh;padding:72px 20px;display:flex;align-items:center;justify-content:center}
-    
-    .btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700; border: none; cursor: pointer; transition: background 0.3s;}
-    .btn-primary{background:var(--teal);color:#fff}
-    .btn-primary:hover{background:#008a96;}
-    
-    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(10,20,20,0.04)}
-    .small-muted{font-size:0.85rem;color:var(--muted)}
-    
-    /* ===== Auth UI (from index.html) ===== */
-    #auth{background:linear-gradient(180deg,#fff9f6,#f6f8fb);flex-direction:column}
-    .auth-wrap{max-width:900px;width:100%;display:grid;grid-template-columns:420px 1fr;gap:18px}
-    .auth-card{background:var(--card);padding:16px;border-radius:12px; box-shadow:0 6px 18px rgba(10,20,20,0.04);}
-    .tabs{display:flex;gap:8px;margin-bottom:12px}
-    .tab{padding:8px 12px;border-radius:8px;cursor:pointer;background:transparent;border:1px solid rgba(0,0,0,0.06)}
-    .tab.active{background:var(--teal);color:#fff;border-color:transparent}
-    
-    .field{display:flex;flex-direction:column;margin-bottom:10px}
-    .field label{font-size:0.9rem;color:var(--muted);margin-bottom:6px}
-    .field input, .field select, input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
-      padding:10px;border-radius:8px;border:1px solid #e2e7e7;
-      font-size: 1rem; font-family: 'Work Sans', sans-serif;
-    }
-    
-    form {
-      display: none;
-      flex-direction: column;
-      gap: 10px; 
-    }
-    form.active {
-      display: flex;
-    }
-    
-    form button {
-      background: var(--teal);
-      color: #fff;
-      font-weight: 600;
-      border: none;
-      padding: 0.7rem;
-      border-radius: 999px; 
-      cursor: pointer;
-      transition: background 0.3s;
-      font-size: 1rem;
-      margin-top: 10px; /* Added margin */
-    }
-    form button:hover {
-      background: #008a96;
-    }
-    
-  </style>
 </head>
 <body>
 
@@ -112,11 +29,9 @@
 </header>
 
 <main>
-  <section id="auth">
-    <div style="max-width: 420px; width: 100%;">
+  <section id="auth"> <div style="max-width: 420px; width: 100%;">
       
-      <div class="auth-card">
-        <h1 style="text-align: center; margin-top: 0;">Beyond the Horizon</h1>
+      <div class="auth-card"> <h1 style="text-align: center; margin-top: 0;">Beyond the Horizon</h1>
         <div class="tabs">
           <div class="tab active" id="loginTab">Login</div>
           <div class="tab" id="registerTab">Register</div>
@@ -130,6 +45,10 @@
           <div class="field">
             <label for="loginPassword">Password</label>
             <input type="password" id="loginPassword" placeholder="Password" required>
+          </div>
+          <div class="admin-check">
+            <input type="checkbox" id="adminCheck">
+            <label for="adminCheck">Login as Admin</label>
           </div>
           <button type="submit">Login</button>
         </form>
@@ -149,7 +68,7 @@
           </div>
           <div class="field">
             <label for="registerPassword">Password</label>
-            <input type="password" id="registerPassword" placeholder="Password" required>
+            <input type="password"id="registerPassword" placeholder="Password" required>
           </div>
           <button type="submit">Register</button>
         </form>
@@ -184,10 +103,9 @@
     // Register logic
     registerForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      // MODIFIED: Get new fields
-      const email = document.getElementById('registerEmail').value;
-      const username = document.getElementById('registerUsername').value;
-      const phone = document.getElementById('registerPhone').value;
+      const email = document.getElementById('registerEmail').value.trim();
+      const username = document.getElementById('registerUsername').value.trim();
+      const phone = document.getElementById('registerPhone').value.trim();
       const password = document.getElementById('registerPassword').value;
 
       if (!email || !username || !password) {
@@ -195,29 +113,78 @@
         return;
       }
       
-      // MODIFIED: Use email as the key
       if (localStorage.getItem(email)) {
         alert('An account with this email already exists.');
-      } else {
-        // MODIFIED: Store all new user data
-        localStorage.setItem(email, JSON.stringify({ username, password, phone }));
-        alert('Registration successful! You can now log in.');
-        loginTab.click();
+        return;
       }
+      
+      let isUsernameTaken = false;
+      let isPhoneTaken = false;
+      
+      for (const key in localStorage) {
+        if (!localStorage.hasOwnProperty(key) || key === 'loggedInUser' || key === 'bth_cart' || key === 'admin@bth.com' || key.startsWith('bth_')) {
+          continue;
+        }
+        
+        try {
+          const userData = JSON.parse(localStorage.getItem(key));
+          if (userData && userData.username && userData.username.toLowerCase() === username.toLowerCase()) {
+            isUsernameTaken = true;
+          }
+          if (userData && userData.phone && userData.phone === phone && phone !== "") {
+            isPhoneTaken = true;
+          }
+        } catch (err) {}
+      }
+      
+      if (isUsernameTaken) {
+        alert('This Username (IGN) is already taken. Please choose another.');
+        return;
+      }
+      
+      if (isPhoneTaken) {
+        alert('This phone number is already registered to another account.');
+        return;
+      }
+      
+      const newUserData = {
+        username: username, password: password, phone: phone,
+        isVerified: false, isSuspended: false, payment: null,
+        level: 1, inGameCurrency: 0, achievements: [], inventory: [] 
+      };
+      localStorage.setItem(email, JSON.stringify(newUserData));
+      alert('Registration successful! You can now log in.');
+      loginTab.click();
     });
 
     // Login logic
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      // MODIFIED: Login with email
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
+      const isAdmin = document.getElementById('adminCheck').checked;
       
-      // MODIFIED: Get user by email
+      // --- ADMIN LOGIN ---
+      if (isAdmin) {
+        if (email === 'admin@bth.com' && password === 'adminpass') {
+          localStorage.setItem('loggedInUser', 'admin@bth.com');
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          alert('Invalid Admin credentials.');
+        }
+        return; 
+      }
+      
+      // --- PLAYER LOGIN ---
       const userData = JSON.parse(localStorage.getItem(email));
 
       if (userData && userData.password === password) {
-        // MODIFIED: Store the email as the loggedInUser key
+        
+        if (userData.isSuspended) {
+          alert('Your account is suspended. Please contact support.');
+          return;
+        }
+        
         localStorage.setItem('loggedInUser', email);
         window.location.href = 'player-dashboard.html';
       } else {
